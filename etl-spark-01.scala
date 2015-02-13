@@ -126,6 +126,7 @@ data1.cache()
 
 val g1 = mds.groupBy(md => md.m)
 // group the 10 lines of data based on the value in the 'm' field (T/F)
+// returns: Map[Boolean, Array[MatchData]]
 
 
 val counts = g1.mapValues(x => x.size)
