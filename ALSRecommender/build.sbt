@@ -1,15 +1,13 @@
 
+assemblyJarName in assembly :="als-recommender.jar"
 
-
-assemblyJarName in assembly := "SparkGrep.jar"
-
-organization := "com.dougybarbo"
-
-name := "sparkGrep"
+// organization := "org.dougybarbo"
 
 version := "0.1"
 
-crossScalaVersions := Seq("2.10.4", "2.11.7")
+mainClass in assembly := Some("ALSRecommender")
+
+crossScalaVersions := Seq("2.10.5", "2.11.7")
 
 sourceDirectory := new File(baseDirectory.value, "src")
 
@@ -45,10 +43,10 @@ javacOptions ++= Seq(
 )
 
 assemblyMergeStrategy in assembly := {
-	case PathList("javax", "servlet", xs @ _*) 				=> MergeStrategy.first
-	case PathList(ps @ _*) if ps.last endsWith ".html"	=> MergeStrategy.first
-	case "application.conf"								=> MergeStrategy.concat
-	case "unwanted.txt" 									=> MergeStrategy.discard
+	case PathList("javax", "servlet", xs @ _*) 			=>		MergeStrategy.first
+	case PathList(ps @ _*) if ps.last endsWith ".html"	=>		MergeStrategy.first
+	case "application.conf"								=>		MergeStrategy.concat
+	case "unwanted.txt" 									=>		MergeStrategy.discard
 	case x 													=>
 		val oldStrategy = (assemblyMergeStrategy in assembly).value
 		oldStrategy(x)
@@ -56,11 +54,16 @@ assemblyMergeStrategy in assembly := {
 
 mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
 	{
-		case "application.conf" => MergeStrategy.concat
-		case "reference.conf" => MergeStrategy.concat
-		case "META-INF/spring.tooling" => MergeStrategy.concat
-		case "overview.html" => MergeStrategy.rename
-		case x => old(x)
+		case "application.conf" 								=>		MergeStrategy.concat
+		case "reference.conf" 									=> 		MergeStrategy.concat
+		case "META-INF/spring.tooling" 						=>		MergeStrategy.concat
+		case "overview.html"									=> 		MergeStrategy.rename
+		case PathList("javax", "servlet", xs @ _*) 			=>		MergeStrategy.last
+		case PathList("org", "apache", xs @ _*) 				=> 		MergeStrategy.last
+		case PathList("META-INF", xs @ _*) 					=> 		MergeStrategy.discard
+		case PathList("com", "esotericsoftware", xs @ _*) 	=> 		MergeStrategy.last
+		case "about.html" 										=> 		MergeStrategy.rename
+		case x 													=>		old(x)
 	}
 }
 
@@ -70,3 +73,4 @@ excludedJars in assembly <<= (fullClasspath in assembly) map { cp =>
 		(f.data.getName contains "sbt-link")
 	}
 }
+

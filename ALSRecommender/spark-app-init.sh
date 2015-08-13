@@ -21,8 +21,8 @@ sbt clean assembly
 
 $SPARK_HOME/bin/spark-submit \
 	--driver-memory 6g \
-	--class "SparkGrep" \
+	--class "ALSRecommender" \
 	--master "local[*]" \
 	--deploy-mode client \
-	target/scala-2.10/SparkGrep.jar
+	target/scala-2.10/als-recommender.jar
 
